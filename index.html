@@ -52,8 +52,6 @@
 
         body {
             margin: 0;
-            min-height: 100vh;
-
             background: var(--background);
             color: var(--text);
 
@@ -65,6 +63,8 @@
                 Helvetica,
                 Arial,
                 sans-serif;
+
+            min-height: 100vh;
         }
 
         button,
@@ -76,10 +76,6 @@
         button {
             cursor: pointer;
         }
-
-        /* ------------------------------------------------------------
-           Header
-        ------------------------------------------------------------ */
 
         .app-header {
             background: #0f172a;
@@ -99,31 +95,21 @@
         }
 
         .header-content {
-            width: 100%;
             max-width: 700px;
-            margin: 0 auto;
+            margin: auto;
         }
 
         .app-title {
             margin: 0;
-
             font-size: 1.35rem;
             font-weight: 700;
-            line-height: 1.25;
         }
 
         .app-subtitle {
             margin: 4px 0 0;
-
             color: #cbd5e1;
-
             font-size: 0.85rem;
-            line-height: 1.4;
         }
-
-        /* ------------------------------------------------------------
-           Layout
-        ------------------------------------------------------------ */
 
         .container {
             width: 100%;
@@ -141,17 +127,15 @@
             margin-bottom: 16px;
         }
 
-        /* ------------------------------------------------------------
-           Cards
-        ------------------------------------------------------------ */
-
         .card {
             background: var(--surface);
 
             border: 1px solid var(--border);
+
             border-radius: var(--radius);
 
             padding: 18px;
+
             margin-bottom: 16px;
 
             box-shadow:
@@ -163,21 +147,15 @@
 
             font-size: 1.05rem;
             font-weight: 700;
-            line-height: 1.3;
         }
 
         .card-description {
             margin: 0 0 18px;
 
             color: var(--muted);
-
             font-size: 0.85rem;
             line-height: 1.4;
         }
-
-        /* ------------------------------------------------------------
-           Form
-        ------------------------------------------------------------ */
 
         .form-group {
             margin-bottom: 15px;
@@ -203,17 +181,21 @@
         input,
         select {
             width: 100%;
+
             min-height: 48px;
 
             padding: 11px 12px;
 
             border: 1px solid var(--border);
+
             border-radius: 10px;
 
             background: white;
             color: var(--text);
 
             outline: none;
+
+            appearance: none;
         }
 
         input:focus,
@@ -222,13 +204,6 @@
 
             box-shadow:
                 0 0 0 3px rgba(37, 99, 235, 0.12);
-        }
-
-        input:disabled,
-        select:disabled {
-            background: #f8fafc;
-            color: var(--muted);
-            cursor: not-allowed;
         }
 
         .unit {
@@ -247,29 +222,25 @@
         }
 
         .input-with-unit {
-            padding-right: 60px;
+            padding-right: 55px;
         }
-
-        /* ------------------------------------------------------------
-           Devices
-        ------------------------------------------------------------ */
 
         .device-list {
             display: flex;
             flex-direction: column;
-
             gap: 12px;
 
             margin-bottom: 12px;
         }
 
         .device-card {
+            border: 1px solid var(--border);
+
+            border-radius: 12px;
+
             padding: 14px;
 
             background: #f8fafc;
-
-            border: 1px solid var(--border);
-            border-radius: 12px;
         }
 
         .device-header {
@@ -277,8 +248,6 @@
 
             align-items: center;
             justify-content: space-between;
-
-            gap: 10px;
 
             margin-bottom: 12px;
         }
@@ -290,9 +259,8 @@
 
         .remove-device {
             border: 0;
-            border-radius: 8px;
-
             background: transparent;
+
             color: var(--danger);
 
             padding: 6px 8px;
@@ -302,7 +270,7 @@
         }
 
         .remove-device:hover {
-            background: var(--danger-bg);
+            text-decoration: underline;
         }
 
         .device-grid {
@@ -317,20 +285,17 @@
             grid-column: 1 / -1;
         }
 
-        /* ------------------------------------------------------------
-           Buttons
-        ------------------------------------------------------------ */
-
         .button {
             width: 100%;
-            min-height: 50px;
 
-            padding: 12px 16px;
+            min-height: 50px;
 
             border: 0;
             border-radius: 11px;
 
             font-weight: 700;
+
+            padding: 12px 16px;
 
             transition:
                 background 0.15s ease,
@@ -339,8 +304,8 @@
         }
 
         .button:disabled {
-            opacity: 0.6;
             cursor: not-allowed;
+            opacity: 0.65;
         }
 
         .button-primary {
@@ -348,7 +313,7 @@
             color: white;
         }
 
-        .button-primary:hover:not(:disabled) {
+        .button-primary:hover {
             background: var(--primary-dark);
         }
 
@@ -357,12 +322,13 @@
             color: var(--text);
         }
 
-        .button-secondary:hover:not(:disabled) {
+        .button-secondary:hover {
             background: #cbd5e1;
         }
 
         .button-add {
             background: white;
+
             color: var(--primary);
 
             border: 1px dashed #93c5fd;
@@ -372,7 +338,7 @@
             background: #eff6ff;
         }
 
-        .button:active:not(:disabled) {
+        .button:active {
             transform: scale(0.99);
         }
 
@@ -383,10 +349,6 @@
 
             gap: 10px;
         }
-
-        /* ------------------------------------------------------------
-           Results
-        ------------------------------------------------------------ */
 
         #results {
             display: none;
@@ -400,6 +362,7 @@
             margin-bottom: 14px;
 
             font-weight: 700;
+
             line-height: 1.4;
         }
 
@@ -435,7 +398,6 @@
             color: var(--muted);
 
             font-size: 0.75rem;
-            line-height: 1.35;
 
             margin-bottom: 5px;
         }
@@ -446,36 +408,31 @@
         }
 
         .result-unit {
+            font-size: 0.75rem;
+
             color: var(--muted);
 
-            font-size: 0.75rem;
             font-weight: 500;
-        }
-
-        .result-section-title {
-            margin: 0 0 12px;
-
-            font-size: 1rem;
-            font-weight: 700;
         }
 
         .progress {
             height: 8px;
-
-            margin-top: 8px;
 
             background: #e2e8f0;
 
             border-radius: 999px;
 
             overflow: hidden;
+
+            margin-top: 8px;
         }
 
         .progress-bar {
-            width: 0%;
             height: 100%;
 
             background: var(--success);
+
+            width: 0%;
 
             transition:
                 width 0.3s ease,
@@ -490,17 +447,12 @@
             background: var(--danger);
         }
 
-        /* ------------------------------------------------------------
-           Alerts
-        ------------------------------------------------------------ */
-
         .alert {
             padding: 13px;
 
             border-radius: 10px;
 
             font-size: 0.85rem;
-            line-height: 1.4;
 
             margin-top: 12px;
         }
@@ -514,10 +466,6 @@
             background: var(--danger-bg);
             color: #991b1b;
         }
-
-        /* ------------------------------------------------------------
-           Loading
-        ------------------------------------------------------------ */
 
         .loading {
             display: none;
@@ -533,14 +481,42 @@
             width: 24px;
             height: 24px;
 
-            margin: 0 auto 10px;
-
             border: 3px solid #dbeafe;
+
             border-top-color: var(--primary);
 
             border-radius: 50%;
 
             animation: spin 0.8s linear infinite;
+
+            margin: 0 auto 10px;
+        }
+
+        .api-status {
+            display: none;
+
+            margin-bottom: 16px;
+
+            padding: 12px 14px;
+
+            border-radius: 10px;
+
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+
+        .api-status-error {
+            display: block;
+
+            background: var(--danger-bg);
+            color: #991b1b;
+        }
+
+        .api-status-success {
+            display: block;
+
+            background: var(--success-bg);
+            color: #166534;
         }
 
         @keyframes spin {
@@ -548,42 +524,6 @@
                 transform: rotate(360deg);
             }
         }
-
-        /* ------------------------------------------------------------
-           API status
-        ------------------------------------------------------------ */
-
-        .api-status {
-            margin-top: 10px;
-
-            padding: 9px 11px;
-
-            border-radius: 8px;
-
-            font-size: 0.75rem;
-            line-height: 1.4;
-
-            background: #f8fafc;
-            color: var(--muted);
-
-            border: 1px solid var(--border);
-        }
-
-        .api-status.ok {
-            background: var(--success-bg);
-            color: #166534;
-            border-color: #bbf7d0;
-        }
-
-        .api-status.error {
-            background: var(--danger-bg);
-            color: #991b1b;
-            border-color: #fecaca;
-        }
-
-        /* ------------------------------------------------------------
-           Desktop
-        ------------------------------------------------------------ */
 
         @media (min-width: 600px) {
             .container {
@@ -600,6 +540,10 @@
 
             .device-grid .full-width {
                 grid-column: auto;
+            }
+
+            .device-grid .device-name-group {
+                grid-column: 1 / -1;
             }
         }
     </style>
@@ -620,7 +564,14 @@
 
 <main class="container">
 
-    <!-- Loop Configuration -->
+    <div
+        id="apiStatus"
+        class="api-status"
+        role="alert"
+    ></div>
+
+
+    <!-- Loop configuration -->
 
     <section class="card">
 
@@ -632,7 +583,9 @@
             Enter the loop and panel information.
         </p>
 
+
         <div class="form-group">
+
             <label for="loopName">
                 Loop name
             </label>
@@ -643,15 +596,18 @@
                 value="Loop 1"
                 placeholder="Loop 1"
             >
+
         </div>
 
 
         <div class="form-group">
+
             <label for="capacity">
                 Loop capacity
             </label>
 
             <div class="input-wrapper">
+
                 <input
                     id="capacity"
                     class="input-with-unit"
@@ -663,16 +619,20 @@
                 >
 
                 <span class="unit">mA</span>
+
             </div>
+
         </div>
 
 
         <div class="form-group">
+
             <label for="supplyVoltage">
                 Supply voltage
             </label>
 
             <div class="input-wrapper">
+
                 <input
                     id="supplyVoltage"
                     class="input-with-unit"
@@ -684,16 +644,20 @@
                 >
 
                 <span class="unit">V</span>
+
             </div>
+
         </div>
 
 
         <div class="form-group">
+
             <label for="minimumVoltage">
                 Minimum device voltage
             </label>
 
             <div class="input-wrapper">
+
                 <input
                     id="minimumVoltage"
                     class="input-with-unit"
@@ -705,7 +669,9 @@
                 >
 
                 <span class="unit">V</span>
+
             </div>
+
         </div>
 
     </section>
@@ -731,9 +697,9 @@
 
 
         <button
-            id="addDeviceButton"
             type="button"
             class="button button-add"
+            id="addDeviceButton"
         >
             + Add Device
         </button>
@@ -846,30 +812,22 @@
         <div class="button-row">
 
             <button
-                id="calculateButton"
                 type="button"
                 class="button button-primary"
+                id="calculateButton"
             >
                 Calculate Loop
             </button>
 
 
             <button
-                id="resetButton"
                 type="button"
                 class="button button-secondary"
+                id="resetButton"
             >
                 Reset
             </button>
 
-        </div>
-
-
-        <div
-            id="apiStatus"
-            class="api-status"
-        >
-            API endpoint: /api/calculate
         </div>
 
     </section>
@@ -881,9 +839,11 @@
         id="loading"
         class="loading"
     >
+
         <div class="spinner"></div>
 
         Calculating...
+
     </div>
 
 
@@ -914,8 +874,15 @@
                 </div>
 
                 <div class="result-value">
-                    <span id="resultCapacity">—</span>
-                    <span class="result-unit">mA</span>
+
+                    <span id="resultCapacity">
+                        —
+                    </span>
+
+                    <span class="result-unit">
+                        mA
+                    </span>
+
                 </div>
 
             </div>
@@ -928,8 +895,15 @@
                 </div>
 
                 <div class="result-value">
-                    <span id="resultStandby">—</span>
-                    <span class="result-unit">mA</span>
+
+                    <span id="resultStandby">
+                        —
+                    </span>
+
+                    <span class="result-unit">
+                        mA
+                    </span>
+
                 </div>
 
             </div>
@@ -942,8 +916,15 @@
                 </div>
 
                 <div class="result-value">
-                    <span id="resultAlarm">—</span>
-                    <span class="result-unit">mA</span>
+
+                    <span id="resultAlarm">
+                        —
+                    </span>
+
+                    <span class="result-unit">
+                        mA
+                    </span>
+
                 </div>
 
             </div>
@@ -956,8 +937,15 @@
                 </div>
 
                 <div class="result-value">
-                    <span id="resultRemaining">—</span>
-                    <span class="result-unit">mA</span>
+
+                    <span id="resultRemaining">
+                        —
+                    </span>
+
+                    <span class="result-unit">
+                        mA
+                    </span>
+
                 </div>
 
             </div>
@@ -972,7 +960,9 @@
             </div>
 
             <strong>
-                <span id="resultAlarmPercentage">0</span>%
+                <span id="resultAlarmPercentage">
+                    0
+                </span>%
             </strong>
 
             <div class="progress">
@@ -989,10 +979,10 @@
 
         <div
             id="voltageResults"
-            style="display: none; margin-top: 18px;"
+            style="margin-top: 18px; display: none;"
         >
 
-            <h3 class="result-section-title">
+            <h3>
                 Voltage Drop
             </h3>
 
@@ -1006,8 +996,15 @@
                     </div>
 
                     <div class="result-value">
-                        <span id="standbyVoltage">—</span>
-                        <span class="result-unit">V</span>
+
+                        <span id="standbyVoltage">
+                            —
+                        </span>
+
+                        <span class="result-unit">
+                            V
+                        </span>
+
                     </div>
 
                 </div>
@@ -1020,8 +1017,15 @@
                     </div>
 
                     <div class="result-value">
-                        <span id="alarmVoltage">—</span>
-                        <span class="result-unit">V</span>
+
+                        <span id="alarmVoltage">
+                            —
+                        </span>
+
+                        <span class="result-unit">
+                            V
+                        </span>
+
                     </div>
 
                 </div>
@@ -1039,462 +1043,388 @@
 
 
 <script>
-    "use strict";
-
-    /*
-     * ============================================================
-     * Configuration
-     * ============================================================
-     *
-     * index.html is in the PROJECT ROOT.
-     *
-     * When FastAPI serves this file:
-     *
-     *     http://localhost:8000/
-     *
-     * the API is:
-     *
-     *     http://localhost:8000/api/calculate
-     *
-     * Therefore a relative URL is deliberately used here.
-     */
-
-    const API_CALCULATE_URL = "/api/calculate";
+"use strict";
 
 
-    /*
-     * ============================================================
-     * State
-     * ============================================================
-     */
+/* ------------------------------------------------------------------
+   Device management
+------------------------------------------------------------------ */
 
-    let deviceCounter = 0;
+let deviceCounter = 0;
 
 
-    /*
-     * ============================================================
-     * DOM helpers
-     * ============================================================
-     */
+function addDevice(
+    name = "",
+    quantity = 1,
+    standby = 0,
+    alarm = 0
+) {
+    deviceCounter++;
 
-    function getElement(id) {
-        return document.getElementById(id);
-    }
+    const deviceList =
+        document.getElementById("deviceList");
+
+    const device =
+        document.createElement("div");
+
+    device.className = "device-card";
+
+    device.dataset.deviceId =
+        String(deviceCounter);
+
+    device.innerHTML = `
+        <div class="device-header">
+
+            <span class="device-number">
+                Device ${deviceCounter}
+            </span>
+
+            <button
+                type="button"
+                class="remove-device"
+                data-remove-device="${deviceCounter}"
+            >
+                Remove
+            </button>
+
+        </div>
+
+        <div class="device-grid">
+
+            <div class="form-group full-width device-name-group">
+
+                <label>
+                    Device name
+                </label>
+
+                <input
+                    type="text"
+                    class="device-name"
+                    value="${escapeHtml(name)}"
+                    placeholder="Smoke Detector"
+                >
+
+            </div>
 
 
-    /*
-     * ============================================================
-     * Device management
-     * ============================================================
-     */
+            <div class="form-group">
 
-    function addDevice(
-        name = "",
-        quantity = 1,
-        standby = 0,
-        alarm = 0
-    ) {
-        deviceCounter += 1;
+                <label>
+                    Quantity
+                </label>
 
-        const deviceList = getElement("deviceList");
+                <input
+                    type="number"
+                    class="device-quantity"
+                    min="1"
+                    step="1"
+                    inputmode="numeric"
+                    value="${quantity}"
+                >
 
-        const device = document.createElement("div");
+            </div>
 
-        device.className = "device-card";
 
-        device.dataset.deviceId = String(deviceCounter);
+            <div class="form-group">
 
-        const header = document.createElement("div");
-        header.className = "device-header";
+                <label>
+                    Standby mA
+                </label>
 
-        const number = document.createElement("span");
-        number.className = "device-number";
-        number.textContent = "Device " + deviceCounter;
+                <input
+                    type="number"
+                    class="device-standby"
+                    min="0"
+                    step="0.01"
+                    inputmode="decimal"
+                    value="${standby}"
+                >
 
-        const removeButton = document.createElement("button");
-        removeButton.type = "button";
-        removeButton.className = "remove-device";
-        removeButton.textContent = "Remove";
+            </div>
 
-        removeButton.addEventListener(
-            "click",
-            function () {
-                removeDevice(deviceCounter);
-            }
+
+            <div class="form-group">
+
+                <label>
+                    Alarm mA
+                </label>
+
+                <input
+                    type="number"
+                    class="device-alarm"
+                    min="0"
+                    step="0.01"
+                    inputmode="decimal"
+                    value="${alarm}"
+                >
+
+            </div>
+
+        </div>
+    `;
+
+    deviceList.appendChild(device);
+}
+
+
+function removeDevice(id) {
+    const device =
+        document.querySelector(
+            `[data-device-id="${id}"]`
         );
 
-        header.appendChild(number);
-        header.appendChild(removeButton);
-
-
-        const grid = document.createElement("div");
-        grid.className = "device-grid";
-
-
-        const nameGroup = document.createElement("div");
-        nameGroup.className = "form-group full-width";
-
-        const nameLabel = document.createElement("label");
-        nameLabel.textContent = "Device name";
-
-        const nameInput = document.createElement("input");
-        nameInput.type = "text";
-        nameInput.className = "device-name";
-        nameInput.placeholder = "Smoke Detector";
-        nameInput.value = name;
-
-        nameGroup.appendChild(nameLabel);
-        nameGroup.appendChild(nameInput);
-
-
-        const quantityGroup = document.createElement("div");
-        quantityGroup.className = "form-group";
-
-        const quantityLabel = document.createElement("label");
-        quantityLabel.textContent = "Quantity";
-
-        const quantityInput = document.createElement("input");
-        quantityInput.type = "number";
-        quantityInput.className = "device-quantity";
-        quantityInput.min = "1";
-        quantityInput.step = "1";
-        quantityInput.inputMode = "numeric";
-        quantityInput.value = String(quantity);
-
-        quantityGroup.appendChild(quantityLabel);
-        quantityGroup.appendChild(quantityInput);
-
-
-        const standbyGroup = document.createElement("div");
-        standbyGroup.className = "form-group";
-
-        const standbyLabel = document.createElement("label");
-        standbyLabel.textContent = "Standby mA";
-
-        const standbyInput = document.createElement("input");
-        standbyInput.type = "number";
-        standbyInput.className = "device-standby";
-        standbyInput.min = "0";
-        standbyInput.step = "0.01";
-        standbyInput.inputMode = "decimal";
-        standbyInput.value = String(standby);
-
-        standbyGroup.appendChild(standbyLabel);
-        standbyGroup.appendChild(standbyInput);
-
-
-        const alarmGroup = document.createElement("div");
-        alarmGroup.className = "form-group";
-
-        const alarmLabel = document.createElement("label");
-        alarmLabel.textContent = "Alarm mA";
-
-        const alarmInput = document.createElement("input");
-        alarmInput.type = "number";
-        alarmInput.className = "device-alarm";
-        alarmInput.min = "0";
-        alarmInput.step = "0.01";
-        alarmInput.inputMode = "decimal";
-        alarmInput.value = String(alarm);
-
-        alarmGroup.appendChild(alarmLabel);
-        alarmGroup.appendChild(alarmInput);
-
-
-        grid.appendChild(nameGroup);
-        grid.appendChild(quantityGroup);
-        grid.appendChild(standbyGroup);
-        grid.appendChild(alarmGroup);
-
-        device.appendChild(header);
-        device.appendChild(grid);
-
-        deviceList.appendChild(device);
+    if (device) {
+        device.remove();
     }
+}
 
 
-    function removeDevice(id) {
-        const device = document.querySelector(
-            '[data-device-id="' + String(id) + '"]'
-        );
-
-        if (device) {
-            device.remove();
-        }
-
-        renumberDevices();
-    }
-
-
-    function renumberDevices() {
-        const devices = document.querySelectorAll(
+function getDevices() {
+    const elements =
+        document.querySelectorAll(
             ".device-card"
         );
 
-        devices.forEach(function (device, index) {
-            const number = device.querySelector(
-                ".device-number"
-            );
+    return Array.from(elements).map(
+        (element) => ({
+            name:
+                element
+                    .querySelector(".device-name")
+                    .value
+                    .trim(),
 
-            if (number) {
-                number.textContent =
-                    "Device " + String(index + 1);
-            }
-        });
-    }
+            quantity:
+                Number(
+                    element
+                        .querySelector(".device-quantity")
+                        .value
+                ),
+
+            standby_current_ma:
+                Number(
+                    element
+                        .querySelector(".device-standby")
+                        .value
+                ),
+
+            alarm_current_ma:
+                Number(
+                    element
+                        .querySelector(".device-alarm")
+                        .value
+                )
+        })
+    );
+}
 
 
-    function getDevices() {
-        const deviceElements =
-            document.querySelectorAll(".device-card");
+/* ------------------------------------------------------------------
+   Cable
+------------------------------------------------------------------ */
 
-        return Array.from(deviceElements).map(
-            function (element) {
-                const quantityInput =
-                    element.querySelector(
-                        ".device-quantity"
-                    );
-
-                const standbyInput =
-                    element.querySelector(
-                        ".device-standby"
-                    );
-
-                const alarmInput =
-                    element.querySelector(
-                        ".device-alarm"
-                    );
-
-                const nameInput =
-                    element.querySelector(
-                        ".device-name"
-                    );
-
-                return {
-                    name: nameInput
-                        ? nameInput.value.trim()
-                        : "",
-
-                    quantity: Number(
-                        quantityInput
-                            ? quantityInput.value
-                            : 0
-                    ),
-
-                    standby_current_ma: Number(
-                        standbyInput
-                            ? standbyInput.value
-                            : 0
-                    ),
-
-                    alarm_current_ma: Number(
-                        alarmInput
-                            ? alarmInput.value
-                            : 0
-                    )
-                };
-            }
+function buildCable() {
+    const length =
+        Number(
+            document.getElementById(
+                "cableLength"
+            ).value
         );
-    }
 
+    const resistance =
+        Number(
+            document.getElementById(
+                "resistance"
+            ).value
+        );
+
+    const conductors =
+        Number(
+            document.getElementById(
+                "conductors"
+            ).value
+        );
 
     /*
-     * ============================================================
-     * Cable
-     * ============================================================
+     * No cable calculation if either cable
+     * length or resistance is zero.
      */
+    if (
+        !Number.isFinite(length) ||
+        !Number.isFinite(resistance) ||
+        length <= 0 ||
+        resistance <= 0
+    ) {
+        return null;
+    }
 
-    function buildCable() {
-        const length = Number(
-            getElement("cableLength").value
-        );
-
-        const resistance = Number(
-            getElement("resistance").value
-        );
-
-        const conductorCount = Number(
-            getElement("conductors").value
-        );
-
-
-        /*
-         * No cable calculation requested.
-         */
-
-        if (
-            !Number.isFinite(length) ||
-            !Number.isFinite(resistance) ||
-            length <= 0 ||
-            resistance <= 0
-        ) {
-            return null;
-        }
-
-
-        if (
-            !Number.isFinite(conductorCount) ||
-            conductorCount < 1
-        ) {
-            throw new Error(
-                "Conductors in current path must be at least 1."
-            );
-        }
-
-
-        return {
-            cable_type: getElement(
+    return {
+        cable_type:
+            document.getElementById(
                 "cableType"
             ).value.trim(),
 
-            length_m: length,
+        length_m: length,
 
-            resistance_per_metre_ohm:
-                resistance,
+        resistance_per_metre_ohm:
+            resistance,
 
-            conductor_count:
-                conductorCount
-        };
+        conductor_count:
+            Number.isFinite(conductors) &&
+            conductors >= 1
+                ? Math.floor(conductors)
+                : 2
+    };
+}
+
+
+/* ------------------------------------------------------------------
+   Request construction
+------------------------------------------------------------------ */
+
+function buildRequest() {
+    return {
+        loop: {
+            configuration: {
+                name:
+                    document.getElementById(
+                        "loopName"
+                    ).value.trim(),
+
+                capacity_ma:
+                    Number(
+                        document.getElementById(
+                            "capacity"
+                        ).value
+                    ),
+
+                supply_voltage_v:
+                    Number(
+                        document.getElementById(
+                            "supplyVoltage"
+                        ).value
+                    ),
+
+                minimum_device_voltage_v:
+                    Number(
+                        document.getElementById(
+                            "minimumVoltage"
+                        ).value
+                    ),
+
+                cable: buildCable()
+            },
+
+            devices: getDevices()
+        }
+    };
+}
+
+
+/* ------------------------------------------------------------------
+   Validation
+------------------------------------------------------------------ */
+
+function validateRequest(request) {
+    const configuration =
+        request.loop.configuration;
+
+    if (
+        !Number.isFinite(
+            configuration.capacity_ma
+        ) ||
+        configuration.capacity_ma <= 0
+    ) {
+        return "Loop capacity must be greater than 0 mA.";
     }
 
-
-    /*
-     * ============================================================
-     * Request construction
-     * ============================================================
-     */
-
-    function buildRequest() {
-        const loopName =
-            getElement("loopName").value.trim();
-
-        const capacity =
-            Number(getElement("capacity").value);
-
-        const supplyVoltage =
-            Number(getElement("supplyVoltage").value);
-
-        const minimumVoltage =
-            Number(getElement("minimumVoltage").value);
-
-
-        if (!loopName) {
-            throw new Error(
-                "Please enter a loop name."
-            );
-        }
-
-
-        if (
-            !Number.isFinite(capacity) ||
-            capacity <= 0
-        ) {
-            throw new Error(
-                "Loop capacity must be greater than 0 mA."
-            );
-        }
-
-
-        if (
-            !Number.isFinite(supplyVoltage) ||
-            supplyVoltage <= 0
-        ) {
-            throw new Error(
-                "Supply voltage must be greater than 0 V."
-            );
-        }
-
-
-        if (
-            !Number.isFinite(minimumVoltage) ||
-            minimumVoltage < 0
-        ) {
-            throw new Error(
-                "Minimum device voltage cannot be negative."
-            );
-        }
-
-
-        return {
-            loop: {
-                configuration: {
-                    name: loopName,
-
-                    capacity_ma: capacity,
-
-                    supply_voltage_v:
-                        supplyVoltage,
-
-                    minimum_device_voltage_v:
-                        minimumVoltage,
-
-                    cable: buildCable()
-                },
-
-                devices: getDevices()
-            }
-        };
+    if (
+        !Number.isFinite(
+            configuration.supply_voltage_v
+        ) ||
+        configuration.supply_voltage_v <= 0
+    ) {
+        return "Supply voltage must be greater than 0 V.";
     }
 
+    if (
+        !Number.isFinite(
+            configuration.minimum_device_voltage_v
+        ) ||
+        configuration.minimum_device_voltage_v < 0
+    ) {
+        return "Minimum device voltage cannot be negative.";
+    }
 
-    /*
-     * ============================================================
-     * Calculation
-     * ============================================================
-     */
+    if (!Array.isArray(request.loop.devices)) {
+        return "Invalid device list.";
+    }
 
-    async function calculateLoop() {
-        const devices = getDevices();
+    if (request.loop.devices.length === 0) {
+        return "Please add at least one device.";
+    }
 
+    for (
+        let i = 0;
+        i < request.loop.devices.length;
+        i++
+    ) {
+        const device =
+            request.loop.devices[i];
 
-        if (devices.length === 0) {
-            showError(
-                "Please add at least one device."
-            );
-
-            return;
+        if (
+            !Number.isFinite(device.quantity) ||
+            device.quantity < 1
+        ) {
+            return `Device ${i + 1}: quantity must be at least 1.`;
         }
 
-
-        try {
-            validateDevices(devices);
-        } catch (error) {
-            showError(
-                error.message ||
-                "Please check the device values."
-            );
-
-            return;
+        if (
+            !Number.isFinite(
+                device.standby_current_ma
+            ) ||
+            device.standby_current_ma < 0
+        ) {
+            return `Device ${i + 1}: standby current cannot be negative.`;
         }
 
-
-        let request;
-
-        try {
-            request = buildRequest();
-        } catch (error) {
-            showError(
-                error.message ||
-                "Please check the input values."
-            );
-
-            return;
+        if (
+            !Number.isFinite(
+                device.alarm_current_ma
+            ) ||
+            device.alarm_current_ma < 0
+        ) {
+            return `Device ${i + 1}: alarm current cannot be negative.`;
         }
+    }
+
+    return null;
+}
 
 
-        setApiStatus(
-            "Connecting to calculation API...",
-            ""
-        );
+/* ------------------------------------------------------------------
+   API
+------------------------------------------------------------------ */
 
-        showLoading(true);
+async function calculateLoop() {
+    clearApiStatus();
 
-        setCalculateButtonDisabled(true);
+    const request =
+        buildRequest();
 
+    const validationError =
+        validateRequest(request);
 
-        try {
-            const response = await fetch(
-                API_CALCULATE_URL,
+    if (validationError) {
+        showError(validationError);
+        return;
+    }
+
+    setCalculating(true);
+
+    try {
+        const response =
+            await fetch(
+                "/api/calculate",
                 {
                     method: "POST",
 
@@ -1506,713 +1436,628 @@
                             "application/json"
                     },
 
-                    body: JSON.stringify(request)
+                    body:
+                        JSON.stringify(request)
                 }
             );
 
+        const contentType =
+            response.headers.get(
+                "content-type"
+            ) || "";
 
-            /*
-             * Handle a 404 specifically.
-             *
-             * This makes the actual deployment problem obvious
-             * instead of just showing "Calculation failed".
-             */
+        let data = null;
 
-            if (response.status === 404) {
-                throw new Error(
-                    "Calculation API was not found at " +
-                    API_CALCULATE_URL +
-                    ". Make sure FastAPI is serving this page and " +
-                    "that POST /api/calculate exists."
-                );
-            }
+        if (
+            contentType.includes(
+                "application/json"
+            )
+        ) {
+            data =
+                await response.json();
+        } else {
+            const text =
+                await response.text();
 
-
-            const contentType =
-                response.headers.get(
-                    "content-type"
-                ) || "";
-
-
-            let data = null;
-
-
-            if (
-                contentType.includes(
-                    "application/json"
-                )
-            ) {
-                data = await response.json();
-            } else {
-                const text = await response.text();
-
+            if (text) {
                 data = {
-                    detail:
-                        text ||
-                        "The server returned an unexpected response."
+                    detail: text
                 };
             }
-
-
-            if (!response.ok) {
-                throw new Error(
-                    data.detail ||
-                    data.message ||
-                    "Calculation failed. HTTP " +
-                    response.status
-                );
-            }
-
-
-            displayResults(data);
-
-            setApiStatus(
-                "API connected successfully.",
-                "ok"
-            );
-
-        } catch (error) {
-            console.error(
-                "Loop calculation error:",
-                error
-            );
-
-            showError(
-                error.message ||
-                "Unable to perform calculation."
-            );
-
-            setApiStatus(
-                "API request failed: " +
-                (
-                    error.message ||
-                    "Unknown error"
-                ),
-                "error"
-            );
-
-        } finally {
-            showLoading(false);
-
-            setCalculateButtonDisabled(false);
         }
-    }
 
+        if (!response.ok) {
+            const detail =
+                data &&
+                data.detail
+                    ? data.detail
+                    : `Calculation failed (HTTP ${response.status}).`;
 
-    /*
-     * ============================================================
-     * Device validation
-     * ============================================================
-     */
+            throw new Error(detail);
+        }
 
-    function validateDevices(devices) {
-        devices.forEach(
-            function (device, index) {
-                const deviceNumber =
-                    index + 1;
+        displayResults(data);
 
-
-                if (
-                    !Number.isFinite(
-                        device.quantity
-                    ) ||
-                    device.quantity < 1
-                ) {
-                    throw new Error(
-                        "Device " +
-                        deviceNumber +
-                        ": quantity must be at least 1."
-                    );
-                }
-
-
-                if (
-                    !Number.isFinite(
-                        device.standby_current_ma
-                    ) ||
-                    device.standby_current_ma < 0
-                ) {
-                    throw new Error(
-                        "Device " +
-                        deviceNumber +
-                        ": standby current cannot be negative."
-                    );
-                }
-
-
-                if (
-                    !Number.isFinite(
-                        device.alarm_current_ma
-                    ) ||
-                    device.alarm_current_ma < 0
-                ) {
-                    throw new Error(
-                        "Device " +
-                        deviceNumber +
-                        ": alarm current cannot be negative."
-                    );
-                }
-            }
+    } catch (error) {
+        console.error(
+            "Calculation error:",
+            error
         );
+
+        showError(
+            error &&
+            error.message
+                ? error.message
+                : "Unable to perform calculation."
+        );
+
+    } finally {
+        setCalculating(false);
+    }
+}
+
+
+/* ------------------------------------------------------------------
+   Results
+------------------------------------------------------------------ */
+
+function displayResults(data) {
+    const load =
+        data && data.load
+            ? data.load
+            : null;
+
+    if (!load) {
+        showError(
+            "The server returned an invalid calculation result."
+        );
+
+        return;
     }
 
+    const results =
+        document.getElementById(
+            "results"
+        );
 
-    /*
-     * ============================================================
-     * Display results
-     * ============================================================
-     */
-
-    function displayResults(data) {
-        const load = data && data.load;
+    results.style.display =
+        "block";
 
 
-        if (!load) {
-            throw new Error(
-                "The API response did not contain load results."
-            );
-        }
-
-
-        getElement("results").style.display =
-            "block";
-
-
-        getElement("resultCapacity").textContent =
-            formatNumber(load.capacity_ma);
-
-
-        getElement("resultStandby").textContent =
-            formatNumber(
-                load.standby_load_ma
-            );
-
-
-        getElement("resultAlarm").textContent =
-            formatNumber(
-                load.alarm_load_ma
-            );
-
-
-        getElement("resultRemaining").textContent =
-            formatNumber(
-                load.alarm_remaining_ma
-            );
-
-
-        getElement(
-            "resultAlarmPercentage"
-        ).textContent =
-            formatNumber(
-                load.alarm_percentage
-            );
-
-
-        updateProgress(
-            Number(load.alarm_percentage)
+    document.getElementById(
+        "resultCapacity"
+    ).textContent =
+        formatNumber(
+            load.capacity_ma
         );
 
 
-        const status =
-            getElement("status");
-
-
-        if (data.passed === true) {
-            status.className =
-                "result-status status-pass";
-
-            status.textContent =
-                "✓ LOOP CALCULATION PASSED";
-
-        } else {
-            status.className =
-                "result-status status-fail";
-
-            status.textContent =
-                "✕ LOOP CALCULATION FAILED";
-        }
-
-
-        displayVoltageResults(data);
-
-        displayWarnings(data.warnings);
-
-
-        getElement("results").scrollIntoView({
-            behavior: "smooth",
-            block: "start"
-        });
-    }
-
-
-    /*
-     * ============================================================
-     * Voltage results
-     * ============================================================
-     */
-
-    function displayVoltageResults(data) {
-        const voltageResults =
-            getElement("voltageResults");
-
-
-        const standbyVoltage =
-            data.standby_voltage;
-
-        const alarmVoltage =
-            data.alarm_voltage;
-
-
-        if (
-            standbyVoltage ||
-            alarmVoltage
-        ) {
-            voltageResults.style.display =
-                "block";
-
-
-            if (standbyVoltage) {
-                getElement(
-                    "standbyVoltage"
-                ).textContent =
-                    formatNumber(
-                        standbyVoltage.end_voltage_v
-                    );
-            } else {
-                getElement(
-                    "standbyVoltage"
-                ).textContent = "—";
-            }
-
-
-            if (alarmVoltage) {
-                getElement(
-                    "alarmVoltage"
-                ).textContent =
-                    formatNumber(
-                        alarmVoltage.end_voltage_v
-                    );
-            } else {
-                getElement(
-                    "alarmVoltage"
-                ).textContent = "—";
-            }
-
-        } else {
-            voltageResults.style.display =
-                "none";
-
-            getElement(
-                "standbyVoltage"
-            ).textContent = "—";
-
-            getElement(
-                "alarmVoltage"
-            ).textContent = "—";
-        }
-    }
-
-
-    /*
-     * ============================================================
-     * Warnings
-     * ============================================================
-     */
-
-    function displayWarnings(warnings) {
-        const warningsContainer =
-            getElement("warnings");
-
-        warningsContainer.innerHTML = "";
-
-
-        if (
-            !Array.isArray(warnings) ||
-            warnings.length === 0
-        ) {
-            return;
-        }
-
-
-        warnings.forEach(
-            function (warning) {
-                const alert =
-                    document.createElement("div");
-
-                alert.className =
-                    "alert alert-warning";
-
-                alert.textContent =
-                    String(warning);
-
-                warningsContainer.appendChild(
-                    alert
-                );
-            }
+    document.getElementById(
+        "resultStandby"
+    ).textContent =
+        formatNumber(
+            load.standby_load_ma
         );
-    }
 
 
-    /*
-     * ============================================================
-     * Progress bar
-     * ============================================================
-     */
-
-    function updateProgress(percentage) {
-        const progress =
-            getElement("alarmProgress");
+    document.getElementById(
+        "resultAlarm"
+    ).textContent =
+        formatNumber(
+            load.alarm_load_ma
+        );
 
 
-        if (!Number.isFinite(percentage)) {
-            percentage = 0;
-        }
+    document.getElementById(
+        "resultRemaining"
+    ).textContent =
+        formatNumber(
+            load.alarm_remaining_ma
+        );
 
 
-        const safePercentage =
-            Math.min(
-                Math.max(percentage, 0),
-                100
-            );
+    document.getElementById(
+        "resultAlarmPercentage"
+    ).textContent =
+        formatNumber(
+            load.alarm_percentage
+        );
 
 
-        progress.style.width =
-            String(safePercentage) + "%";
+    updateProgress(
+        Number(
+            load.alarm_percentage
+        )
+    );
 
 
-        progress.className =
-            "progress-bar";
+    const status =
+        document.getElementById(
+            "status"
+        );
 
 
-        if (percentage >= 100) {
-            progress.classList.add(
-                "danger"
-            );
+    if (data.passed) {
+        status.className =
+            "result-status status-pass";
 
-        } else if (percentage >= 80) {
-            progress.classList.add(
-                "warning"
-            );
-        }
-    }
-
-
-    /*
-     * ============================================================
-     * Loading
-     * ============================================================
-     */
-
-    function showLoading(show) {
-        getElement("loading").style.display =
-            show ? "block" : "none";
-    }
-
-
-    function setCalculateButtonDisabled(
-        disabled
-    ) {
-        const button =
-            getElement("calculateButton");
-
-        button.disabled = disabled;
-
-        button.textContent =
-            disabled
-                ? "Calculating..."
-                : "Calculate Loop";
-    }
-
-
-    /*
-     * ============================================================
-     * API status
-     * ============================================================
-     */
-
-    function setApiStatus(message, type) {
-        const element =
-            getElement("apiStatus");
-
-        element.textContent = message;
-
-        element.className =
-            "api-status";
-
-        if (type === "ok") {
-            element.classList.add("ok");
-        }
-
-        if (type === "error") {
-            element.classList.add("error");
-        }
-    }
-
-
-    /*
-     * ============================================================
-     * Error display
-     * ============================================================
-     */
-
-    function showError(message) {
-        const results =
-            getElement("results");
-
-        results.style.display =
-            "block";
-
-
-        const status =
-            getElement("status");
-
+        status.textContent =
+            "✓ LOOP CALCULATION PASSED";
+    } else {
         status.className =
             "result-status status-fail";
 
         status.textContent =
-            "✕ " + String(message);
-
-
-        getElement(
-            "resultCapacity"
-        ).textContent = "—";
-
-        getElement(
-            "resultStandby"
-        ).textContent = "—";
-
-        getElement(
-            "resultAlarm"
-        ).textContent = "—";
-
-        getElement(
-            "resultRemaining"
-        ).textContent = "—";
-
-        getElement(
-            "resultAlarmPercentage"
-        ).textContent = "0";
-
-
-        updateProgress(0);
-
-
-        getElement(
-            "voltageResults"
-        ).style.display = "none";
-
-
-        getElement(
-            "warnings"
-        ).innerHTML = "";
+            "✕ LOOP CALCULATION FAILED";
     }
 
 
-    /*
-     * ============================================================
-     * Reset
-     * ============================================================
-     */
+    displayVoltageResults(data);
 
-    function resetCalculator() {
-        getElement("loopName").value =
-            "Loop 1";
-
-        getElement("capacity").value =
-            "500";
-
-        getElement("supplyVoltage").value =
-            "24";
-
-        getElement("minimumVoltage").value =
-            "0";
-
-        getElement("cableType").value =
-            "";
-
-        getElement("cableLength").value =
-            "0";
-
-        getElement("resistance").value =
-            "0";
-
-        getElement("conductors").value =
-            "2";
+    displayWarnings(data);
 
 
-        getElement("deviceList").innerHTML =
-            "";
-
-        deviceCounter = 0;
-
-
-        getElement("results").style.display =
-            "none";
+    results.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+}
 
 
-        getElement("warnings").innerHTML =
-            "";
-
-
-        getElement(
+function displayVoltageResults(data) {
+    const voltageResults =
+        document.getElementById(
             "voltageResults"
-        ).style.display = "none";
+        );
+
+    const standbyVoltage =
+        data.standby_voltage;
+
+    const alarmVoltage =
+        data.alarm_voltage;
 
 
-        updateProgress(0);
+    if (
+        standbyVoltage ||
+        alarmVoltage
+    ) {
+        voltageResults.style.display =
+            "block";
 
 
-        setApiStatus(
-            "API endpoint: " +
-            API_CALCULATE_URL,
-            ""
+        document.getElementById(
+            "standbyVoltage"
+        ).textContent =
+            standbyVoltage
+                ? formatNumber(
+                    standbyVoltage.end_voltage_v
+                )
+                : "—";
+
+
+        document.getElementById(
+            "alarmVoltage"
+        ).textContent =
+            alarmVoltage
+                ? formatNumber(
+                    alarmVoltage.end_voltage_v
+                )
+                : "—";
+
+    } else {
+        voltageResults.style.display =
+            "none";
+    }
+}
+
+
+function displayWarnings(data) {
+    const warnings =
+        document.getElementById(
+            "warnings"
+        );
+
+    warnings.innerHTML = "";
+
+
+    if (
+        !data ||
+        !Array.isArray(
+            data.warnings
+        )
+    ) {
+        return;
+    }
+
+
+    data.warnings.forEach(
+        (warning) => {
+            const alert =
+                document.createElement(
+                    "div"
+                );
+
+            alert.className =
+                "alert alert-warning";
+
+            alert.textContent =
+                String(warning);
+
+            warnings.appendChild(
+                alert
+            );
+        }
+    );
+}
+
+
+function updateProgress(percentage) {
+    const progress =
+        document.getElementById(
+            "alarmProgress"
+        );
+
+    if (!Number.isFinite(percentage)) {
+        percentage = 0;
+    }
+
+    const safePercentage =
+        Math.min(
+            Math.max(
+                percentage,
+                0
+            ),
+            100
+        );
+
+    progress.style.width =
+        `${safePercentage}%`;
+
+    progress.className =
+        "progress-bar";
+
+
+    if (percentage >= 100) {
+        progress.classList.add(
+            "danger"
+        );
+    } else if (percentage >= 80) {
+        progress.classList.add(
+            "warning"
+        );
+    }
+}
+
+
+/* ------------------------------------------------------------------
+   Loading / errors
+------------------------------------------------------------------ */
+
+function setCalculating(isCalculating) {
+    const loading =
+        document.getElementById(
+            "loading"
+        );
+
+    const calculateButton =
+        document.getElementById(
+            "calculateButton"
+        );
+
+    const resetButton =
+        document.getElementById(
+            "resetButton"
+        );
+
+    const addButton =
+        document.getElementById(
+            "addDeviceButton"
         );
 
 
+    loading.style.display =
+        isCalculating
+            ? "block"
+            : "none";
+
+
+    calculateButton.disabled =
+        isCalculating;
+
+    resetButton.disabled =
+        isCalculating;
+
+    addButton.disabled =
+        isCalculating;
+}
+
+
+function showError(message) {
+    const results =
+        document.getElementById(
+            "results"
+        );
+
+    results.style.display =
+        "block";
+
+
+    const status =
+        document.getElementById(
+            "status"
+        );
+
+    status.className =
+        "result-status status-fail";
+
+    status.textContent =
+        `✕ ${message}`;
+
+
+    document.getElementById(
+        "warnings"
+    ).innerHTML = "";
+
+
+    results.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+}
+
+
+/* ------------------------------------------------------------------
+   API status
+------------------------------------------------------------------ */
+
+function showApiStatus(message, type) {
+    const element =
+        document.getElementById(
+            "apiStatus"
+        );
+
+    element.textContent =
+        message;
+
+    element.className =
+        "api-status";
+
+
+    if (type === "error") {
+        element.classList.add(
+            "api-status-error"
+        );
+    }
+
+    if (type === "success") {
+        element.classList.add(
+            "api-status-success"
+        );
+    }
+}
+
+
+function clearApiStatus() {
+    const element =
+        document.getElementById(
+            "apiStatus"
+        );
+
+    element.textContent =
+        "";
+
+    element.className =
+        "api-status";
+}
+
+
+/* ------------------------------------------------------------------
+   Reset
+------------------------------------------------------------------ */
+
+function resetCalculator() {
+    document.getElementById(
+        "loopName"
+    ).value =
+        "Loop 1";
+
+
+    document.getElementById(
+        "capacity"
+    ).value =
+        "500";
+
+
+    document.getElementById(
+        "supplyVoltage"
+    ).value =
+        "24";
+
+
+    document.getElementById(
+        "minimumVoltage"
+    ).value =
+        "0";
+
+
+    document.getElementById(
+        "cableType"
+    ).value =
+        "";
+
+
+    document.getElementById(
+        "cableLength"
+    ).value =
+        "0";
+
+
+    document.getElementById(
+        "resistance"
+    ).value =
+        "0";
+
+
+    document.getElementById(
+        "conductors"
+    ).value =
+        "2";
+
+
+    document.getElementById(
+        "deviceList"
+    ).innerHTML =
+        "";
+
+
+    deviceCounter = 0;
+
+
+    document.getElementById(
+        "results"
+    ).style.display =
+        "none";
+
+
+    document.getElementById(
+        "warnings"
+    ).innerHTML =
+        "";
+
+
+    document.getElementById(
+        "alarmProgress"
+    ).style.width =
+        "0%";
+
+
+    document.getElementById(
+        "alarmProgress"
+    ).className =
+        "progress-bar";
+
+
+    clearApiStatus();
+
+
+    addDevice();
+}
+
+
+/* ------------------------------------------------------------------
+   Formatting
+------------------------------------------------------------------ */
+
+function formatNumber(value) {
+    const number =
+        Number(value);
+
+    if (
+        !Number.isFinite(number)
+    ) {
+        return "—";
+    }
+
+    return number.toFixed(2);
+}
+
+
+function escapeHtml(value) {
+    return String(value)
+        .replaceAll(
+            "&",
+            "&amp;"
+        )
+        .replaceAll(
+            "<",
+            "&lt;"
+        )
+        .replaceAll(
+            ">",
+            "&gt;"
+        )
+        .replaceAll(
+            '"',
+            "&quot;"
+        )
+        .replaceAll(
+            "'",
+            "&#039;"
+        );
+}
+
+
+/* ------------------------------------------------------------------
+   Event handlers
+------------------------------------------------------------------ */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
         addDevice();
-    }
 
 
-    /*
-     * ============================================================
-     * Formatting
-     * ============================================================
-     */
-
-    function formatNumber(value) {
-        const number = Number(value);
-
-
-        if (!Number.isFinite(number)) {
-            return "—";
-        }
-
-
-        return number.toFixed(2);
-    }
-
-
-    /*
-     * ============================================================
-     * API connectivity check
-     * ============================================================
-     *
-     * This is intentionally only a GET request to /api/health.
-     * It does NOT attempt a calculation.
-     */
-
-    async function checkApiHealth() {
-        try {
-            const response =
-                await fetch(
-                    "/api/health",
-                    {
-                        method: "GET",
-                        headers: {
-                            "Accept":
-                                "application/json"
-                        }
-                    }
-                );
-
-
-            if (!response.ok) {
-                throw new Error(
-                    "HTTP " +
-                    response.status
-                );
-            }
-
-
-            const data =
-                await response.json();
-
-
-            if (
-                data &&
-                data.status === "ok"
-            ) {
-                setApiStatus(
-                    "API connected. Ready to calculate.",
-                    "ok"
-                );
-
-                return;
-            }
-
-
-            setApiStatus(
-                "API responded, but health status is unexpected.",
-                "error"
-            );
-
-        } catch (error) {
-            /*
-             * Do not prevent the calculator from loading.
-             *
-             * This is useful if index.html is opened directly
-             * as a static file rather than through FastAPI.
-             */
-
-            console.warn(
-                "API health check failed:",
-                error
-            );
-
-
-            setApiStatus(
-                "API health check unavailable. Calculations require the FastAPI backend.",
-                "error"
-            );
-        }
-    }
-
-
-    /*
-     * ============================================================
-     * Initialisation
-     * ============================================================
-     */
-
-    document.addEventListener(
-        "DOMContentLoaded",
-        function () {
-            getElement(
+        document
+            .getElementById(
                 "addDeviceButton"
-            ).addEventListener(
+            )
+            .addEventListener(
                 "click",
-                function () {
-                    addDevice();
-                }
+                () => addDevice()
             );
 
 
-            getElement(
+        document
+            .getElementById(
                 "calculateButton"
-            ).addEventListener(
+            )
+            .addEventListener(
                 "click",
-                function () {
-                    calculateLoop();
-                }
+                calculateLoop
             );
 
 
-            getElement(
+        document
+            .getElementById(
                 "resetButton"
-            ).addEventListener(
+            )
+            .addEventListener(
                 "click",
-                function () {
-                    resetCalculator();
-                }
+                resetCalculator
             );
 
 
-            addDevice();
+        document
+            .getElementById(
+                "deviceList"
+            )
+            .addEventListener(
+                "click",
+                (event) => {
+                    const button =
+                        event.target.closest(
+                            "[data-remove-device]"
+                        );
 
+                    if (!button) {
+                        return;
+                    }
 
-            checkApiHealth();
-        }
-    );
+                    const id =
+                        Number(
+                            button.dataset
+                                .removeDevice
+                        );
+
+                    if (
+                        Number.isFinite(id)
+                    ) {
+                        removeDevice(id);
+                    }
+                }
+            );
+    }
+);
 </script>
 
 </body>

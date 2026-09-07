@@ -1,9 +1,8 @@
-# backend/app/main.py
-
-from pathlib import Path
-
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import FileResponse
+
+from .services.calculation_service import (
+    calculate_complete_loop,
+)
 
 from .models import Device
 
@@ -12,14 +11,10 @@ from .schemas import (
     CalculationResultSchema,
 )
 
-from .services.calculation_service import (
-    calculate_complete_loop,
-)
 
-
-# ============================================================================
+# ---------------------------------------------------------------------------
 # Application
-# ============================================================================
+# ---------------------------------------------------------------------------
 
 app = FastAPI(
     title="ZP3 Loop Load Calculator",
@@ -28,64 +23,14 @@ app = FastAPI(
 )
 
 
-# ============================================================================
-# Paths
-# ============================================================================
-
-# Project structure:
-#
-# loop-load-calculator/
-# ├── index.html
-# └── backend/
-#     └── app/
-#         └── main.py
-#
-# From:
-#
-# backend/app/main.py
-#
-# parents[0] = backend/app
-# parents[1] = backend
-# parents[2] = project root
-
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-
-INDEX_FILE = PROJECT_ROOT / "index.html"
-
-
-# ============================================================================
-# Frontend
-# ============================================================================
-
-@app.get("/", include_in_schema=False)
-async def frontend():
-    """
-    Serve the frontend from the project root.
-    """
-
-    if not INDEX_FILE.exists():
-        raise HTTPException(
-            status_code=404,
-            detail=(
-                "Frontend index.html not found. "
-                f"Expected: {INDEX_FILE}"
-            ),
-        )
-
-    return FileResponse(
-        path=INDEX_FILE,
-        media_type="text/html",
-    )
-
-
-# ============================================================================
-# Health
-# ============================================================================
+# ---------------------------------------------------------------------------
+# Health check
+# ---------------------------------------------------------------------------
 
 @app.get("/api/health")
 async def health_check():
     """
-    API health check.
+    Check that the API is running.
     """
 
     return {
@@ -95,9 +40,9 @@ async def health_check():
     }
 
 
-# ============================================================================
-# Calculation
-# ============================================================================
+# ---------------------------------------------------------------------------
+# Calculation API
+# ---------------------------------------------------------------------------
 
 @app.post(
     "/api/calculate",
@@ -112,15 +57,15 @@ async def calculate_loop(
 
     try:
 
-        # --------------------------------------------------------------------
-        # Loop configuration
-        # --------------------------------------------------------------------
+        # ---------------------------------------------------------------
+        # Get loop configuration
+        # ---------------------------------------------------------------
 
         loop_config = request.loop.configuration
 
-        # --------------------------------------------------------------------
-        # Convert request devices to domain models
-        # --------------------------------------------------------------------
+        # ---------------------------------------------------------------
+        # Convert API schemas into domain models
+        # ---------------------------------------------------------------
 
         devices = [
             Device(
@@ -134,25 +79,24 @@ async def calculate_loop(
             for device in request.loop.devices
         ]
 
-        # --------------------------------------------------------------------
-        # Cable resistance
-        # --------------------------------------------------------------------
+        # ---------------------------------------------------------------
+        # Calculate cable resistance
+        # ---------------------------------------------------------------
 
         cable_resistance_ohm = None
 
         cable = loop_config.cable
 
         if cable is not None:
-
             cable_resistance_ohm = (
                 cable.resistance_per_metre_ohm
                 * cable.length_m
                 * cable.conductor_count
             )
 
-        # --------------------------------------------------------------------
+        # ---------------------------------------------------------------
         # Perform calculation
-        # --------------------------------------------------------------------
+        # ---------------------------------------------------------------
 
         result = calculate_complete_loop(
             devices=devices,
@@ -166,9 +110,9 @@ async def calculate_loop(
 
         load = result["load"]
 
-        # --------------------------------------------------------------------
+        # ---------------------------------------------------------------
         # Standby voltage
-        # --------------------------------------------------------------------
+        # ---------------------------------------------------------------
 
         standby_voltage = None
 
@@ -202,9 +146,9 @@ async def calculate_loop(
                     voltage.voltage_ok,
             }
 
-        # --------------------------------------------------------------------
+        # ---------------------------------------------------------------
         # Alarm voltage
-        # --------------------------------------------------------------------
+        # ---------------------------------------------------------------
 
         alarm_voltage = None
 
@@ -238,29 +182,27 @@ async def calculate_loop(
                     voltage.voltage_ok,
             }
 
-        # --------------------------------------------------------------------
-        # Overall pass/fail
-        # --------------------------------------------------------------------
+        # ---------------------------------------------------------------
+        # Determine overall result
+        # ---------------------------------------------------------------
 
         passed = load.within_capacity
 
         if standby_voltage is not None:
-
             passed = (
                 passed
                 and standby_voltage["voltage_ok"]
             )
 
         if alarm_voltage is not None:
-
             passed = (
                 passed
                 and alarm_voltage["voltage_ok"]
             )
 
-        # --------------------------------------------------------------------
-        # Response
-        # --------------------------------------------------------------------
+        # ---------------------------------------------------------------
+        # Return response
+        # ---------------------------------------------------------------
 
         return CalculationResultSchema(
             loop_name=loop_config.name,
