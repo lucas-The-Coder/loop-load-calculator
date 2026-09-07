@@ -1,17 +1,18 @@
+# backend/app/main.py
+
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
-from fastapi.staticfiles import StaticFiles
 
-from calculation_service import (
+from .services.calculation_service import (
     calculate_complete_loop,
-    calculate_loop_resistance,
 )
-from models import Cable, Device
-from schemas import (
-    CalculationResultSchema,
+
+from .models import Device
+from .schemas import (
     LoopCalculationRequest,
+    CalculationResultSchema,
 )
 
 
@@ -21,77 +22,92 @@ from schemas import (
 
 app = FastAPI(
     title="ZP3 Loop Load Calculator",
-    description="Mobile-first ZP3 loop load calculation API",
+    description="ZP3 loop load calculation API",
     version="1.0.0",
 )
+
+
+# ---------------------------------------------------------------------------
+# Paths
+# ---------------------------------------------------------------------------
+
+# main.py:
+#   backend/app/main.py
+#
+# Project root:
+#   loop-load-calculator/
+#
+# Frontend:
+#   loop-load-calculator/frontend/
+
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+
+FRONTEND_DIR = PROJECT_ROOT / "frontend"
 
 
 # ---------------------------------------------------------------------------
 # Frontend
 # ---------------------------------------------------------------------------
 
-BASE_DIR = Path(__file__).resolve().parent
-FRONTEND_DIR = BASE_DIR / "frontend"
-
-app.mount(
-    "/static",
-    StaticFiles(directory=FRONTEND_DIR),
-    name="static",
-)
-
-
 @app.get("/", include_in_schema=False)
 async def frontend():
-    """Serve the mobile web application."""
+    """Serve the frontend application."""
 
-    return FileResponse(
-        FRONTEND_DIR / "index.html"
-    )
+    index_file = FRONTEND_DIR / "index.html"
+
+    if not index_file.exists():
+        raise HTTPException(
+            status_code=404,
+            detail="Frontend index.html not found.",
+        )
+
+    return FileResponse(index_file)
 
 
 # ---------------------------------------------------------------------------
-# API
+# Health check
 # ---------------------------------------------------------------------------
 
 @app.get("/api/health")
 async def health_check():
-    """Simple backend health check."""
+    """Check that the API is running."""
 
     return {
         "status": "ok",
         "application": "ZP3 Loop Load Calculator",
+        "version": "1.0.0",
     }
 
+
+# ---------------------------------------------------------------------------
+# Calculation API
+# ---------------------------------------------------------------------------
 
 @app.post(
     "/api/calculate",
     response_model=CalculationResultSchema,
 )
-async def calculate(
+async def calculate_loop(
     request: LoopCalculationRequest,
 ):
     """
-    Calculate the electrical load of a ZP3 loop.
+    Calculate the load and optional voltage drop
+    for a ZP3 loop.
     """
 
     try:
-
         loop_config = request.loop.configuration
 
         # ---------------------------------------------------------------
-        # Convert schemas to domain models
+        # Convert API schemas into domain models
         # ---------------------------------------------------------------
 
         devices = [
             Device(
                 name=device.name,
                 quantity=device.quantity,
-                standby_current_ma=(
-                    device.standby_current_ma
-                ),
-                alarm_current_ma=(
-                    device.alarm_current_ma
-                ),
+                standby_current_ma=device.standby_current_ma,
+                alarm_current_ma=device.alarm_current_ma,
                 address=device.address,
                 notes=device.notes,
             )
@@ -99,56 +115,44 @@ async def calculate(
         ]
 
         # ---------------------------------------------------------------
-        # Cable
+        # Cable resistance
         # ---------------------------------------------------------------
 
-        cable_resistance = None
+        cable_resistance_ohm = None
 
-        cable_schema = loop_config.cable
+        cable = loop_config.cable
 
-        if cable_schema is not None:
+        if cable is not None:
 
-            cable = Cable(
-                cable_type=cable_schema.cable_type,
-                length_m=cable_schema.length_m,
-                resistance_per_metre_ohm=(
-                    cable_schema
-                    .resistance_per_metre_ohm
-                ),
-                conductor_count=(
-                    cable_schema.conductor_count
-                ),
-            )
-
-            cable_resistance = (
-                cable.total_resistance_ohm
+            cable_resistance_ohm = (
+                cable.resistance_per_metre_ohm
+                * cable.length_m
+                * cable.conductor_count
             )
 
         # ---------------------------------------------------------------
-        # Calculate
+        # Perform calculation
         # ---------------------------------------------------------------
 
         result = calculate_complete_loop(
             devices=devices,
             capacity_ma=loop_config.capacity_ma,
-            supply_voltage_v=(
-                loop_config.supply_voltage_v
-            ),
+            supply_voltage_v=loop_config.supply_voltage_v,
             minimum_voltage_v=(
                 loop_config.minimum_device_voltage_v
             ),
-            cable_resistance_ohm=cable_resistance,
+            cable_resistance_ohm=cable_resistance_ohm,
         )
 
         load = result["load"]
 
         # ---------------------------------------------------------------
-        # Convert calculation results to API schema
+        # Convert voltage results
         # ---------------------------------------------------------------
 
         standby_voltage = None
 
-        if result["standby_voltage"] is not None:
+        if result.get("standby_voltage") is not None:
 
             voltage = result["standby_voltage"]
 
@@ -180,7 +184,7 @@ async def calculate(
 
         alarm_voltage = None
 
-        if result["alarm_voltage"] is not None:
+        if result.get("alarm_voltage") is not None:
 
             voltage = result["alarm_voltage"]
 
@@ -209,6 +213,28 @@ async def calculate(
                 "voltage_ok":
                     voltage.voltage_ok,
             }
+
+        # ---------------------------------------------------------------
+        # Determine overall result
+        # ---------------------------------------------------------------
+
+        passed = load.within_capacity
+
+        if standby_voltage is not None:
+            passed = (
+                passed
+                and standby_voltage["voltage_ok"]
+            )
+
+        if alarm_voltage is not None:
+            passed = (
+                passed
+                and alarm_voltage["voltage_ok"]
+            )
+
+        # ---------------------------------------------------------------
+        # Return API response
+        # ---------------------------------------------------------------
 
         return CalculationResultSchema(
             loop_name=loop_config.name,
@@ -249,19 +275,12 @@ async def calculate(
 
             alarm_voltage=alarm_voltage,
 
-            warnings=result["warnings"],
-
-            passed=(
-                load.within_capacity
-                and (
-                    standby_voltage is None
-                    or standby_voltage["voltage_ok"]
-                )
-                and (
-                    alarm_voltage is None
-                    or alarm_voltage["voltage_ok"]
-                )
+            warnings=result.get(
+                "warnings",
+                [],
             ),
+
+            passed=passed,
         )
 
     except ValueError as exc:
@@ -273,23 +292,9 @@ async def calculate(
 
     except Exception as exc:
 
+        # During development, this gives us a useful
+        # error response instead of silently failing.
         raise HTTPException(
             status_code=500,
-            detail="An unexpected calculation error occurred.",
+            detail=f"Calculation error: {exc}",
         ) from exc
-
-
-# ---------------------------------------------------------------------------
-# Development server
-# ---------------------------------------------------------------------------
-
-if __name__ == "__main__":
-
-    import uvicorn
-
-    uvicorn.run(
-        "main:app",
-        host="0.0.0.0",
-        port=8000,
-        reload=True,
-    )

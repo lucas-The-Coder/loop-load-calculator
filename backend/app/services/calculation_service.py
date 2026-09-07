@@ -1,6 +1,14 @@
+# backend/app/services/calculation_service.py
+
+"""
+Calculation service for the ZP3 loop load calculator.
+
+This module contains the application-level calculation logic.
+"""
+
 from typing import Iterable
 
-from models import (
+from ..models import (
     Device,
     LoadResult,
     VoltageDropResult,
@@ -8,13 +16,13 @@ from models import (
 
 
 # ---------------------------------------------------------------------------
-# Basic calculations
+# Device load calculations
 # ---------------------------------------------------------------------------
 
 def calculate_device_standby_load(
     device: Device,
 ) -> float:
-    """Calculate total standby current for a device type."""
+    """Calculate the total standby current for a device type."""
 
     return (
         device.quantity
@@ -25,7 +33,7 @@ def calculate_device_standby_load(
 def calculate_device_alarm_load(
     device: Device,
 ) -> float:
-    """Calculate total alarm current for a device type."""
+    """Calculate the total alarm current for a device type."""
 
     return (
         device.quantity
@@ -33,10 +41,14 @@ def calculate_device_alarm_load(
     )
 
 
+# ---------------------------------------------------------------------------
+# Total loop load
+# ---------------------------------------------------------------------------
+
 def calculate_total_standby_load(
     devices: Iterable[Device],
 ) -> float:
-    """Calculate total loop standby current."""
+    """Calculate total standby loop current."""
 
     return sum(
         calculate_device_standby_load(device)
@@ -47,7 +59,7 @@ def calculate_total_standby_load(
 def calculate_total_alarm_load(
     devices: Iterable[Device],
 ) -> float:
-    """Calculate total loop alarm current."""
+    """Calculate total alarm loop current."""
 
     return sum(
         calculate_device_alarm_load(device)
@@ -63,7 +75,7 @@ def calculate_percentage(
     value: float,
     maximum: float,
 ) -> float:
-    """Calculate value as a percentage of maximum."""
+    """Calculate a value as a percentage of a maximum."""
 
     if maximum <= 0:
         raise ValueError(
@@ -74,16 +86,14 @@ def calculate_percentage(
 
 
 # ---------------------------------------------------------------------------
-# Loop load calculation
+# Loop load
 # ---------------------------------------------------------------------------
 
 def calculate_loop_load(
     devices: Iterable[Device],
     capacity_ma: float,
 ) -> LoadResult:
-    """
-    Calculate standby and alarm loading for a loop.
-    """
+    """Calculate the complete loop load."""
 
     if capacity_ma <= 0:
         raise ValueError(
@@ -150,9 +160,9 @@ def calculate_loop_resistance(
     conductor_count: int = 2,
 ) -> float:
     """
-    Calculate total cable resistance.
+    Calculate total loop resistance.
 
-    R = resistance_per_m × length × conductors
+    R = resistance per metre × length × number of conductors
     """
 
     if resistance_per_metre_ohm < 0:
@@ -207,7 +217,7 @@ def calculate_end_voltage(
     current_ma: float,
     resistance_ohm: float,
 ) -> float:
-    """Calculate voltage at the end of the cable."""
+    """Calculate voltage at the end of the loop."""
 
     voltage_drop = calculate_voltage_drop(
         current_ma=current_ma,
@@ -245,7 +255,7 @@ def calculate_voltage_result(
 
 
 # ---------------------------------------------------------------------------
-# Complete calculation
+# Complete loop calculation
 # ---------------------------------------------------------------------------
 
 def calculate_complete_loop(
@@ -256,13 +266,17 @@ def calculate_complete_loop(
     cable_resistance_ohm: float | None = None,
 ):
     """
-    Perform the complete loop calculation.
+    Perform the complete ZP3 loop calculation.
 
-    Includes:
-        - Standby load
-        - Alarm load
-        - Loop capacity
-        - Optional voltage drop
+    Calculates:
+
+    - Standby load
+    - Alarm load
+    - Remaining loop capacity
+    - Load utilisation
+    - Optional standby voltage drop
+    - Optional alarm voltage drop
+    - Overall warnings
     """
 
     load_result = calculate_loop_load(
@@ -274,6 +288,10 @@ def calculate_complete_loop(
     alarm_voltage_result = None
 
     warnings: list[str] = []
+
+    # ---------------------------------------------------------------
+    # Voltage drop
+    # ---------------------------------------------------------------
 
     if cable_resistance_ohm is not None:
 
@@ -303,6 +321,10 @@ def calculate_complete_loop(
                 "the minimum device voltage."
             )
 
+    # ---------------------------------------------------------------
+    # Load warnings
+    # ---------------------------------------------------------------
+
     if load_result.standby_overload:
         warnings.append(
             "Standby current exceeds loop capacity."
@@ -313,9 +335,19 @@ def calculate_complete_loop(
             "Alarm current exceeds loop capacity."
         )
 
+    # ---------------------------------------------------------------
+    # Result
+    # ---------------------------------------------------------------
+
     return {
         "load": load_result,
-        "standby_voltage": standby_voltage_result,
-        "alarm_voltage": alarm_voltage_result,
-        "warnings": warnings,
+
+        "standby_voltage":
+            standby_voltage_result,
+
+        "alarm_voltage":
+            alarm_voltage_result,
+
+        "warnings":
+            warnings,
     }
