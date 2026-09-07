@@ -6,18 +6,20 @@ from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
 
 from .models import Device
+
 from .schemas import (
     LoopCalculationRequest,
     CalculationResultSchema,
 )
+
 from .services.calculation_service import (
     calculate_complete_loop,
 )
 
 
-# ---------------------------------------------------------------------------
+# ============================================================================
 # Application
-# ---------------------------------------------------------------------------
+# ============================================================================
 
 app = FastAPI(
     title="ZP3 Loop Load Calculator",
@@ -26,9 +28,9 @@ app = FastAPI(
 )
 
 
-# ---------------------------------------------------------------------------
+# ============================================================================
 # Paths
-# ---------------------------------------------------------------------------
+# ============================================================================
 
 # Project structure:
 #
@@ -38,49 +40,52 @@ app = FastAPI(
 #     └── app/
 #         └── main.py
 #
-# main.py
-#   parents[0] = app
-#   parents[1] = backend
-#   parents[2] = project root
+# From:
+#
+# backend/app/main.py
+#
+# parents[0] = backend/app
+# parents[1] = backend
+# parents[2] = project root
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 INDEX_FILE = PROJECT_ROOT / "index.html"
 
 
-# ---------------------------------------------------------------------------
+# ============================================================================
 # Frontend
-# ---------------------------------------------------------------------------
+# ============================================================================
 
 @app.get("/", include_in_schema=False)
 async def frontend():
     """
-    Serve the frontend index.html from the project root.
+    Serve the frontend from the project root.
     """
 
     if not INDEX_FILE.exists():
         raise HTTPException(
             status_code=404,
             detail=(
-                f"Frontend index.html not found at: "
-                f"{INDEX_FILE}"
+                "Frontend index.html not found. "
+                f"Expected: {INDEX_FILE}"
             ),
         )
 
     return FileResponse(
-        INDEX_FILE,
+        path=INDEX_FILE,
         media_type="text/html",
     )
 
 
-# ---------------------------------------------------------------------------
-# Health check
-# ---------------------------------------------------------------------------
+# ============================================================================
+# Health
+# ============================================================================
 
 @app.get("/api/health")
 async def health_check():
     """
-    Check that the API is running.
+    API health check.
     """
 
     return {
@@ -90,9 +95,9 @@ async def health_check():
     }
 
 
-# ---------------------------------------------------------------------------
-# Calculation API
-# ---------------------------------------------------------------------------
+# ============================================================================
+# Calculation
+# ============================================================================
 
 @app.post(
     "/api/calculate",
@@ -106,15 +111,16 @@ async def calculate_loop(
     """
 
     try:
-        # ---------------------------------------------------------------
-        # Get loop configuration
-        # ---------------------------------------------------------------
+
+        # --------------------------------------------------------------------
+        # Loop configuration
+        # --------------------------------------------------------------------
 
         loop_config = request.loop.configuration
 
-        # ---------------------------------------------------------------
-        # Convert API schemas into domain models
-        # ---------------------------------------------------------------
+        # --------------------------------------------------------------------
+        # Convert request devices to domain models
+        # --------------------------------------------------------------------
 
         devices = [
             Device(
@@ -128,24 +134,25 @@ async def calculate_loop(
             for device in request.loop.devices
         ]
 
-        # ---------------------------------------------------------------
+        # --------------------------------------------------------------------
         # Cable resistance
-        # ---------------------------------------------------------------
+        # --------------------------------------------------------------------
 
         cable_resistance_ohm = None
 
         cable = loop_config.cable
 
         if cable is not None:
+
             cable_resistance_ohm = (
                 cable.resistance_per_metre_ohm
                 * cable.length_m
                 * cable.conductor_count
             )
 
-        # ---------------------------------------------------------------
+        # --------------------------------------------------------------------
         # Perform calculation
-        # ---------------------------------------------------------------
+        # --------------------------------------------------------------------
 
         result = calculate_complete_loop(
             devices=devices,
@@ -159,13 +166,14 @@ async def calculate_loop(
 
         load = result["load"]
 
-        # ---------------------------------------------------------------
+        # --------------------------------------------------------------------
         # Standby voltage
-        # ---------------------------------------------------------------
+        # --------------------------------------------------------------------
 
         standby_voltage = None
 
         if result.get("standby_voltage") is not None:
+
             voltage = result["standby_voltage"]
 
             standby_voltage = {
@@ -194,13 +202,14 @@ async def calculate_loop(
                     voltage.voltage_ok,
             }
 
-        # ---------------------------------------------------------------
+        # --------------------------------------------------------------------
         # Alarm voltage
-        # ---------------------------------------------------------------
+        # --------------------------------------------------------------------
 
         alarm_voltage = None
 
         if result.get("alarm_voltage") is not None:
+
             voltage = result["alarm_voltage"]
 
             alarm_voltage = {
@@ -229,33 +238,36 @@ async def calculate_loop(
                     voltage.voltage_ok,
             }
 
-        # ---------------------------------------------------------------
-        # Determine overall result
-        # ---------------------------------------------------------------
+        # --------------------------------------------------------------------
+        # Overall pass/fail
+        # --------------------------------------------------------------------
 
         passed = load.within_capacity
 
         if standby_voltage is not None:
+
             passed = (
                 passed
                 and standby_voltage["voltage_ok"]
             )
 
         if alarm_voltage is not None:
+
             passed = (
                 passed
                 and alarm_voltage["voltage_ok"]
             )
 
-        # ---------------------------------------------------------------
-        # Return response
-        # ---------------------------------------------------------------
+        # --------------------------------------------------------------------
+        # Response
+        # --------------------------------------------------------------------
 
         return CalculationResultSchema(
             loop_name=loop_config.name,
 
             load={
-                "capacity_ma": load.capacity_ma,
+                "capacity_ma":
+                    load.capacity_ma,
 
                 "standby_load_ma":
                     load.standby_load_ma,
@@ -298,12 +310,14 @@ async def calculate_loop(
         )
 
     except ValueError as exc:
+
         raise HTTPException(
             status_code=400,
             detail=str(exc),
         ) from exc
 
     except Exception as exc:
+
         raise HTTPException(
             status_code=500,
             detail=f"Calculation error: {exc}",
