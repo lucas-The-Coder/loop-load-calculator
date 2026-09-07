@@ -1,3 +1,1 @@
-from fastapi import FastAPI
-
-app = FastAPI()
+from backend.app.main import app

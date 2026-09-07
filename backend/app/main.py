@@ -10,6 +10,7 @@ from .services.calculation_service import (
 )
 
 from .models import Device
+
 from .schemas import (
     LoopCalculationRequest,
     CalculationResultSchema,
@@ -31,14 +32,18 @@ app = FastAPI(
 # Paths
 # ---------------------------------------------------------------------------
 
-# main.py:
-#   backend/app/main.py
+# Project structure:
 #
-# Project root:
-#   loop-load-calculator/
+# loop-load-calculator/
+# ├── backend/
+# │   └── app/
+# │       └── main.py
+# └── frontend/
+#     └── index.html
 #
-# Frontend:
-#   loop-load-calculator/frontend/
+# parents[0] = app
+# parents[1] = backend
+# parents[2] = project root
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
@@ -51,7 +56,9 @@ FRONTEND_DIR = PROJECT_ROOT / "frontend"
 
 @app.get("/", include_in_schema=False)
 async def frontend():
-    """Serve the frontend application."""
+    """
+    Serve the frontend application.
+    """
 
     index_file = FRONTEND_DIR / "index.html"
 
@@ -70,7 +77,9 @@ async def frontend():
 
 @app.get("/api/health")
 async def health_check():
-    """Check that the API is running."""
+    """
+    Check that the API is running.
+    """
 
     return {
         "status": "ok",
@@ -91,11 +100,15 @@ async def calculate_loop(
     request: LoopCalculationRequest,
 ):
     """
-    Calculate the load and optional voltage drop
-    for a ZP3 loop.
+    Calculate loop load and optional voltage drop.
     """
 
     try:
+
+        # ---------------------------------------------------------------
+        # Get loop configuration
+        # ---------------------------------------------------------------
+
         loop_config = request.loop.configuration
 
         # ---------------------------------------------------------------
@@ -147,7 +160,7 @@ async def calculate_loop(
         load = result["load"]
 
         # ---------------------------------------------------------------
-        # Convert voltage results
+        # Standby voltage
         # ---------------------------------------------------------------
 
         standby_voltage = None
@@ -157,30 +170,25 @@ async def calculate_loop(
             voltage = result["standby_voltage"]
 
             standby_voltage = {
-                "supply_voltage_v":
-                    voltage.supply_voltage_v,
-
-                "current_ma":
-                    voltage.current_ma,
-
-                "cable_resistance_ohm":
-                    voltage.cable_resistance_ohm,
-
-                "voltage_drop_v":
-                    voltage.voltage_drop_v,
-
-                "end_voltage_v":
-                    voltage.end_voltage_v,
-
-                "minimum_voltage_v":
-                    voltage.minimum_voltage_v,
-
-                "voltage_margin_v":
-                    voltage.voltage_margin_v,
-
-                "voltage_ok":
-                    voltage.voltage_ok,
+                "supply_voltage_v": voltage.supply_voltage_v,
+                "current_ma": voltage.current_ma,
+                "cable_resistance_ohm": (
+                    voltage.cable_resistance_ohm
+                ),
+                "voltage_drop_v": voltage.voltage_drop_v,
+                "end_voltage_v": voltage.end_voltage_v,
+                "minimum_voltage_v": (
+                    voltage.minimum_voltage_v
+                ),
+                "voltage_margin_v": (
+                    voltage.voltage_margin_v
+                ),
+                "voltage_ok": voltage.voltage_ok,
             }
+
+        # ---------------------------------------------------------------
+        # Alarm voltage
+        # ---------------------------------------------------------------
 
         alarm_voltage = None
 
@@ -189,29 +197,20 @@ async def calculate_loop(
             voltage = result["alarm_voltage"]
 
             alarm_voltage = {
-                "supply_voltage_v":
-                    voltage.supply_voltage_v,
-
-                "current_ma":
-                    voltage.current_ma,
-
-                "cable_resistance_ohm":
-                    voltage.cable_resistance_ohm,
-
-                "voltage_drop_v":
-                    voltage.voltage_drop_v,
-
-                "end_voltage_v":
-                    voltage.end_voltage_v,
-
-                "minimum_voltage_v":
-                    voltage.minimum_voltage_v,
-
-                "voltage_margin_v":
-                    voltage.voltage_margin_v,
-
-                "voltage_ok":
-                    voltage.voltage_ok,
+                "supply_voltage_v": voltage.supply_voltage_v,
+                "current_ma": voltage.current_ma,
+                "cable_resistance_ohm": (
+                    voltage.cable_resistance_ohm
+                ),
+                "voltage_drop_v": voltage.voltage_drop_v,
+                "end_voltage_v": voltage.end_voltage_v,
+                "minimum_voltage_v": (
+                    voltage.minimum_voltage_v
+                ),
+                "voltage_margin_v": (
+                    voltage.voltage_margin_v
+                ),
+                "voltage_ok": voltage.voltage_ok,
             }
 
         # ---------------------------------------------------------------
@@ -233,15 +232,14 @@ async def calculate_loop(
             )
 
         # ---------------------------------------------------------------
-        # Return API response
+        # Return response
         # ---------------------------------------------------------------
 
         return CalculationResultSchema(
             loop_name=loop_config.name,
 
             load={
-                "capacity_ma":
-                    load.capacity_ma,
+                "capacity_ma": load.capacity_ma,
 
                 "standby_load_ma":
                     load.standby_load_ma,
@@ -292,8 +290,6 @@ async def calculate_loop(
 
     except Exception as exc:
 
-        # During development, this gives us a useful
-        # error response instead of silently failing.
         raise HTTPException(
             status_code=500,
             detail=f"Calculation error: {exc}",

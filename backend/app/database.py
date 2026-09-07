@@ -1,7 +1,19 @@
+# backend/app/database.py
+
+"""
+Database configuration.
+
+The calculator currently performs calculations without
+requiring persistent database storage.
+"""
+
 from pathlib import Path
 
 from sqlalchemy import create_engine
-from sqlalchemy.orm import DeclarativeBase, sessionmaker
+from sqlalchemy.orm import (
+    DeclarativeBase,
+    sessionmaker,
+)
 
 
 # ---------------------------------------------------------------------------
@@ -11,12 +23,10 @@ from sqlalchemy.orm import DeclarativeBase, sessionmaker
 BASE_DIR = Path(__file__).resolve().parent
 
 DATA_DIR = BASE_DIR / "data"
-DATA_DIR.mkdir(
-    parents=True,
-    exist_ok=True,
-)
 
-DATABASE_FILE = DATA_DIR / "zp3_calculator.db"
+DATABASE_FILE = (
+    DATA_DIR / "zp3_calculator.db"
+)
 
 DATABASE_URL = (
     f"sqlite:///{DATABASE_FILE}"
@@ -60,32 +70,41 @@ class Base(DeclarativeBase):
 
 def init_database() -> None:
     """
-    Create database tables if they do not already exist.
+    Initialise database tables.
+
+    Database models should be imported here when they exist.
     """
 
-    from database_models import (
-        ProjectDB,
-        LoopDB,
-        DeviceDB,
-        CalculationDB,
-    )
+    try:
+
+        from .database_models import (
+            ProjectDB,
+            LoopDB,
+            DeviceDB,
+            CalculationDB,
+        )
+
+    except ImportError:
+        # Database models are not currently installed.
+        return
 
     Base.metadata.create_all(
         bind=engine
     )
 
 
-def get_db():
-    """
-    Provide a database session.
+# ---------------------------------------------------------------------------
+# FastAPI dependency
+# ---------------------------------------------------------------------------
 
-    Intended for use with FastAPI dependency injection.
-    """
+def get_db():
 
     db = SessionLocal()
 
     try:
+
         yield db
 
     finally:
+
         db.close()
