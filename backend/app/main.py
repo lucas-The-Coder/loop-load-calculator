@@ -35,19 +35,24 @@ app = FastAPI(
 # Project structure:
 #
 # loop-load-calculator/
-# ├── backend/
-# │   └── app/
-# │       └── main.py
-# └── frontend/
-#     └── index.html
+# ├── index.html
+# └── backend/
+#     └── app/
+#         └── main.py
 #
-# parents[0] = app
-# parents[1] = backend
-# parents[2] = project root
+# main.py
+#   parents[0] = backend/app
+#   parents[1] = backend
+#   parents[2] = project root
+#
+# Therefore:
+# PROJECT_ROOT / "index.html"
+#
+# is the correct location of the frontend.
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
-FRONTEND_DIR = PROJECT_ROOT / "frontend"
+INDEX_FILE = PROJECT_ROOT / "index.html"
 
 
 # ---------------------------------------------------------------------------
@@ -57,18 +62,22 @@ FRONTEND_DIR = PROJECT_ROOT / "frontend"
 @app.get("/", include_in_schema=False)
 async def frontend():
     """
-    Serve the frontend application.
+    Serve the frontend application from the project root.
     """
 
-    index_file = FRONTEND_DIR / "index.html"
-
-    if not index_file.exists():
+    if not INDEX_FILE.exists():
         raise HTTPException(
             status_code=404,
-            detail="Frontend index.html not found.",
+            detail=(
+                "Frontend index.html not found. "
+                f"Expected file at: {INDEX_FILE}"
+            ),
         )
 
-    return FileResponse(index_file)
+    return FileResponse(
+        INDEX_FILE,
+        media_type="text/html",
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -170,20 +179,30 @@ async def calculate_loop(
             voltage = result["standby_voltage"]
 
             standby_voltage = {
-                "supply_voltage_v": voltage.supply_voltage_v,
-                "current_ma": voltage.current_ma,
+                "supply_voltage_v": (
+                    voltage.supply_voltage_v
+                ),
+                "current_ma": (
+                    voltage.current_ma
+                ),
                 "cable_resistance_ohm": (
                     voltage.cable_resistance_ohm
                 ),
-                "voltage_drop_v": voltage.voltage_drop_v,
-                "end_voltage_v": voltage.end_voltage_v,
+                "voltage_drop_v": (
+                    voltage.voltage_drop_v
+                ),
+                "end_voltage_v": (
+                    voltage.end_voltage_v
+                ),
                 "minimum_voltage_v": (
                     voltage.minimum_voltage_v
                 ),
                 "voltage_margin_v": (
                     voltage.voltage_margin_v
                 ),
-                "voltage_ok": voltage.voltage_ok,
+                "voltage_ok": (
+                    voltage.voltage_ok
+                ),
             }
 
         # ---------------------------------------------------------------
@@ -197,20 +216,30 @@ async def calculate_loop(
             voltage = result["alarm_voltage"]
 
             alarm_voltage = {
-                "supply_voltage_v": voltage.supply_voltage_v,
-                "current_ma": voltage.current_ma,
+                "supply_voltage_v": (
+                    voltage.supply_voltage_v
+                ),
+                "current_ma": (
+                    voltage.current_ma
+                ),
                 "cable_resistance_ohm": (
                     voltage.cable_resistance_ohm
                 ),
-                "voltage_drop_v": voltage.voltage_drop_v,
-                "end_voltage_v": voltage.end_voltage_v,
+                "voltage_drop_v": (
+                    voltage.voltage_drop_v
+                ),
+                "end_voltage_v": (
+                    voltage.end_voltage_v
+                ),
                 "minimum_voltage_v": (
                     voltage.minimum_voltage_v
                 ),
                 "voltage_margin_v": (
                     voltage.voltage_margin_v
                 ),
-                "voltage_ok": voltage.voltage_ok,
+                "voltage_ok": (
+                    voltage.voltage_ok
+                ),
             }
 
         # ---------------------------------------------------------------
@@ -239,34 +268,45 @@ async def calculate_loop(
             loop_name=loop_config.name,
 
             load={
-                "capacity_ma": load.capacity_ma,
+                "capacity_ma": (
+                    load.capacity_ma
+                ),
 
-                "standby_load_ma":
-                    load.standby_load_ma,
+                "standby_load_ma": (
+                    load.standby_load_ma
+                ),
 
-                "alarm_load_ma":
-                    load.alarm_load_ma,
+                "alarm_load_ma": (
+                    load.alarm_load_ma
+                ),
 
-                "standby_remaining_ma":
-                    load.standby_remaining_ma,
+                "standby_remaining_ma": (
+                    load.standby_remaining_ma
+                ),
 
-                "alarm_remaining_ma":
-                    load.alarm_remaining_ma,
+                "alarm_remaining_ma": (
+                    load.alarm_remaining_ma
+                ),
 
-                "standby_percentage":
-                    load.standby_percentage,
+                "standby_percentage": (
+                    load.standby_percentage
+                ),
 
-                "alarm_percentage":
-                    load.alarm_percentage,
+                "alarm_percentage": (
+                    load.alarm_percentage
+                ),
 
-                "standby_overload":
-                    load.standby_overload,
+                "standby_overload": (
+                    load.standby_overload
+                ),
 
-                "alarm_overload":
-                    load.alarm_overload,
+                "alarm_overload": (
+                    load.alarm_overload
+                ),
 
-                "within_capacity":
-                    load.within_capacity,
+                "within_capacity": (
+                    load.within_capacity
+                ),
             },
 
             standby_voltage=standby_voltage,
