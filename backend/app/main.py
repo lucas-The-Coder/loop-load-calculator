@@ -1,9 +1,11 @@
+# backend/app/main.py
+
+from pathlib import Path
+
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import FileResponse
 
-from .services.calculation_service import (
-    calculate_complete_loop,
-)
-
+from .services.calculation_service import calculate_complete_loop
 from .models import Device
 
 from .schemas import (
@@ -21,6 +23,57 @@ app = FastAPI(
     description="ZP3 loop load calculation API",
     version="1.0.0",
 )
+
+
+# ---------------------------------------------------------------------------
+# Paths
+# ---------------------------------------------------------------------------
+
+# Project structure:
+#
+# loop-load-calculator/
+# ├── index.html
+# ├── vercel.json
+# └── backend/
+#     └── app/
+#         ├── __init__.py
+#         ├── main.py
+#         ├── models.py
+#         ├── schemas.py
+#         └── services/
+#             ├── __init__.py
+#             └── calculation_service.py
+#
+# main.py
+#   parents[0] = app
+#   parents[1] = backend
+#   parents[2] = project root
+
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+
+INDEX_FILE = PROJECT_ROOT / "index.html"
+
+
+# ---------------------------------------------------------------------------
+# Root / Frontend
+# ---------------------------------------------------------------------------
+
+@app.get("/", include_in_schema=False)
+async def frontend():
+    """
+    Serve the root index.html file.
+    """
+
+    if not INDEX_FILE.exists():
+        raise HTTPException(
+            status_code=404,
+            detail="Root index.html not found.",
+        )
+
+    return FileResponse(
+        INDEX_FILE,
+        media_type="text/html",
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -56,7 +109,6 @@ async def calculate_loop(
     """
 
     try:
-
         # ---------------------------------------------------------------
         # Get loop configuration
         # ---------------------------------------------------------------
@@ -80,7 +132,7 @@ async def calculate_loop(
         ]
 
         # ---------------------------------------------------------------
-        # Calculate cable resistance
+        # Cable resistance
         # ---------------------------------------------------------------
 
         cable_resistance_ohm = None
@@ -108,6 +160,10 @@ async def calculate_loop(
             cable_resistance_ohm=cable_resistance_ohm,
         )
 
+        # ---------------------------------------------------------------
+        # Load results
+        # ---------------------------------------------------------------
+
         load = result["load"]
 
         # ---------------------------------------------------------------
@@ -117,33 +173,23 @@ async def calculate_loop(
         standby_voltage = None
 
         if result.get("standby_voltage") is not None:
-
             voltage = result["standby_voltage"]
 
             standby_voltage = {
-                "supply_voltage_v":
-                    voltage.supply_voltage_v,
-
-                "current_ma":
-                    voltage.current_ma,
-
-                "cable_resistance_ohm":
-                    voltage.cable_resistance_ohm,
-
-                "voltage_drop_v":
-                    voltage.voltage_drop_v,
-
-                "end_voltage_v":
-                    voltage.end_voltage_v,
-
-                "minimum_voltage_v":
-                    voltage.minimum_voltage_v,
-
-                "voltage_margin_v":
-                    voltage.voltage_margin_v,
-
-                "voltage_ok":
-                    voltage.voltage_ok,
+                "supply_voltage_v": voltage.supply_voltage_v,
+                "current_ma": voltage.current_ma,
+                "cable_resistance_ohm": (
+                    voltage.cable_resistance_ohm
+                ),
+                "voltage_drop_v": voltage.voltage_drop_v,
+                "end_voltage_v": voltage.end_voltage_v,
+                "minimum_voltage_v": (
+                    voltage.minimum_voltage_v
+                ),
+                "voltage_margin_v": (
+                    voltage.voltage_margin_v
+                ),
+                "voltage_ok": voltage.voltage_ok,
             }
 
         # ---------------------------------------------------------------
@@ -153,33 +199,23 @@ async def calculate_loop(
         alarm_voltage = None
 
         if result.get("alarm_voltage") is not None:
-
             voltage = result["alarm_voltage"]
 
             alarm_voltage = {
-                "supply_voltage_v":
-                    voltage.supply_voltage_v,
-
-                "current_ma":
-                    voltage.current_ma,
-
-                "cable_resistance_ohm":
-                    voltage.cable_resistance_ohm,
-
-                "voltage_drop_v":
-                    voltage.voltage_drop_v,
-
-                "end_voltage_v":
-                    voltage.end_voltage_v,
-
-                "minimum_voltage_v":
-                    voltage.minimum_voltage_v,
-
-                "voltage_margin_v":
-                    voltage.voltage_margin_v,
-
-                "voltage_ok":
-                    voltage.voltage_ok,
+                "supply_voltage_v": voltage.supply_voltage_v,
+                "current_ma": voltage.current_ma,
+                "cable_resistance_ohm": (
+                    voltage.cable_resistance_ohm
+                ),
+                "voltage_drop_v": voltage.voltage_drop_v,
+                "end_voltage_v": voltage.end_voltage_v,
+                "minimum_voltage_v": (
+                    voltage.minimum_voltage_v
+                ),
+                "voltage_margin_v": (
+                    voltage.voltage_margin_v
+                ),
+                "voltage_ok": voltage.voltage_ok,
             }
 
         # ---------------------------------------------------------------
@@ -208,8 +244,7 @@ async def calculate_loop(
             loop_name=loop_config.name,
 
             load={
-                "capacity_ma":
-                    load.capacity_ma,
+                "capacity_ma": load.capacity_ma,
 
                 "standby_load_ma":
                     load.standby_load_ma,
@@ -252,14 +287,15 @@ async def calculate_loop(
         )
 
     except ValueError as exc:
-
         raise HTTPException(
             status_code=400,
             detail=str(exc),
         ) from exc
 
-    except Exception as exc:
+    except HTTPException:
+        raise
 
+    except Exception as exc:
         raise HTTPException(
             status_code=500,
             detail=f"Calculation error: {exc}",
